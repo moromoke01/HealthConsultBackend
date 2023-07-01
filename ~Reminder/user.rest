@@ -1,0 +1,26 @@
+@url ="http://localhost:3000/"
+GET http://localhost:3000/user
+
+###
+GET http://localhost:3000/user/
+
+
+###
+POST http://localhost:3000/User
+Content-Type: application/json
+
+{
+    "name": "Bello Janet",
+    "email": "bellomoromoke2019@gmail.com",
+    "password": "123456"
+}
+
+###
+PUT http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name": "Moromoke Janet",
+    "email": "janetmoromoke19@gmail.com",
+    "password": "123456"
+}
