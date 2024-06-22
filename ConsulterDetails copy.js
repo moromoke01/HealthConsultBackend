@@ -19,7 +19,24 @@ const ConsulterDetailSchema = new mongoose.Schema({
         type:String,
         required:true
 },
+specialist:{
+    type: String
+},
+healthQuery:{
+    type: String
+},
+symptoms:{
+    type: String
 
+},
+scheduleDate:{
+    type: Date
+
+},
+scheduleTime:{
+    type: String
+
+}
 
 },
 {

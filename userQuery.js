@@ -1,11 +1,17 @@
-const { Timestamp } = require("mongodb")
 const mongoose = require("mongoose")
 
 const UserQuerySchema = new mongoose.Schema({
+    // userId:{
+    //     type: String
+    // },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', //this reference the 'users' collection
+    },
     specialist:{
         type: String
     },
-    heathQuery:{
+    healthQuery:{
         type: String
     },
     symptoms:{
@@ -18,10 +24,12 @@ const UserQuerySchema = new mongoose.Schema({
     },
     scheduleTime:{
         type: String
+        // Timestamp,
+        
 
     }
 },
 {
-    collection: "HealthQuery"
+    collection: "ConsulterQuery"
 })
-mongoose.model("HealthQuery",UserQuerySchema)
+mongoose.model("ConsulterQuery",UserQuerySchema)

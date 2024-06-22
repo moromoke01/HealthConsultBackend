@@ -7,29 +7,33 @@ app.use(cors());
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const Schema = require('./Schema')
+const cookieParser = require('cookie-parser')
 
-
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended:false}));
 app.use(bodyParser.json());
 
+
 const JWT_SECRET_KEY = 'hfPghfuDty3kbinujHlbk8Ut7jmRn8676cr456&78898.mjkhB65fgc9ytutVlu9y8y8756rd09trgfvbg5vhhAnm8.tuydg87IKhugV2KJGDGGHKAS6897675vbznkjdthjDJLSAsarlEHlv656cSAf '
 
-const mongoUrl="mongodb+srv://janet:janet0166@cluster0.hz2mb5d.mongodb.net/?retryWrites=true&w=majority";
+// const mongoUrl="mongodb+srv://janet:janet0166@cluster0.hz2mb5d.mongodb.net/?retryWrites=true&w=majority";
 
-mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+// mongoose.connect(mongoUrl, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+
+mongoose.connect("mongodb://localhost:27017/VirtualHealthConsultation")
 .then(() =>{
     console.log("Connected to database")
 })
 .catch((e) => console.log(e));
 
-//  
+require("./ConsulterDetails");
+require("./userQuery");
 
-const User = mongoose.model("User");
-const Query = mongoose.model("Query");
+const User = mongoose.model("ConsulterInfo");
+const Query = mongoose.model("HealthQuery");
 
 
 //sign-up route
@@ -79,7 +83,7 @@ app.post("/Login", async(req, res) =>{
         //find the user by email
         const findUser =await User.findOne({email});
 
-        if(!findUser){ 
+        if(!findUser){
            return res.status(404).json({
             message: 'User not found'
            });
@@ -108,32 +112,90 @@ app.post("/Login", async(req, res) =>{
     };
 });
 
+
+
 //HealthQuery route
-app.post("/ConsultingSection", async(req, res) =>{
+
+app.post("/ConsultingSection", async (req, res) => {
+    try {
+      const { specialist, healthQuery, symptoms, scheduleDate, scheduleTime } = req.body;
+  
+      await Query.create({
+        specialist,
+        healthQuery,
+        symptoms,
+        scheduleDate,
+        scheduleTime
+      });
+  
+      res.status(200).json({
+        message: 'Your Health Query has been recorded'
+      });
+    } catch (error) {
+      console.log('Error sending query:', error);
+      res.status(500).json({
+        message: 'Internal Server Error'
+      });
+    }
+  });
+  
+
+//getting all query data in database
+app.get('/getConsulterData', async(req, res) =>{
     try{
-        const { specialist, healthQuery, symptoms, scheduleDate, scheduleTime} = req.body;
+        //fetch the data from MongoDB
+        const data = await Query.find();
 
-        const healthQueryData = {
-            specialist: specialist, 
-            healthQuery:healthQuery, 
-            symptoms:symptoms, 
-            scheduleDate:scheduleDate, 
-            scheduleTime: scheduleTime
-
-        }
-
-        const newQuery =new Schema.Query(healthQueryData);
-        const saveQuery = await newQuery.save();
-
-        if(saveQuery){
-            res.send('Query sent, thank you.')
-        }
-        res.end();
+        //send the data in the response
+        res.json(data);
     }catch(error){
-        console.log(error);
+         console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Internal server error' });
     }
 })
 
+//updating query data in database
+app.put("/updateQuery", async(req, res) =>{
+    console.log(req.body)
+    const {id,...rest} =req.body
+
+    console.log(rest)
+    const data = await Query.updateOne({_id : id}, rest);
+
+    res.send({success : true, message: "Patient query successfully updated"})
+})
+
+//delete data query from database
+app.delete("/deleteQuery/:id", async(req, res) =>{
+    try{
+        const  id  = req.params.id;
+    // const id = req.params.id
+    console.log(id)
+
+    const data = await Query.deleteOne({_id : id})
+
+    res.status(200).json({
+        message: "Patient Query successfully deleted"
+    })
+}catch(error){
+    console.log(error);
+    res.status(500).json({
+        message: "Error deleting Query"
+    })
+}
+})
+
+
+
+
+
+
+//saving data receive from client into a cookie
+
+
+
+
+//port connection
 const PORT =5000;
 
 app.listen(PORT, () =>{

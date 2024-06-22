@@ -6,14 +6,13 @@ GET http://localhost:3000/user/
 
 
 ###
-POST http://localhost:3000/user
+POST http://localhost:3000/User
 Content-Type: application/json
 
 {
-    "Username": "Bello Janet",
+    "name": "Bello Janet",
     "email": "bellomoromoke2019@gmail.com",
-    "age": 34,
-    
+    "password": "123456"
 }
 
 ###
