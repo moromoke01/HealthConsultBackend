@@ -31,8 +31,8 @@ mongoose.connect("mongodb://localhost:27017/VirtualHealthConsultation")
 })
 .catch((e) => console.log(e));
 
-require("./ConsulterDetails");
-require("./userQuery");
+// require("./Model/ConsulterDetails");
+require("./Model/userQuery");
 
 const User = mongoose.model("users");
 const Query = mongoose.model("ConsulterQuery");

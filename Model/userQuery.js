@@ -9,27 +9,34 @@ const UserQuerySchema = new mongoose.Schema({
         ref: 'User', //this reference the 'users' collection
     },
     specialist:{
-        type: String
+        type: String,
+        required
     },
     healthQuery:{
-        type: String
+        type: String,
+        required
     },
     symptoms:{
-        type: String
+        type: String,
+        required
 
     },
     scheduleDate:{
-        type: Date
+        type: Date,
+        required
 
     },
     scheduleTime:{
-        type: String
-        // Timestamp,
-        
-
+        type: String ,
+        required    
     }
 },
+// {
+//     collection: "ConsulterQuery"
+// },
 {
-    collection: "ConsulterQuery"
+    timestamps: true,
 })
-mongoose.model("ConsulterQuery",UserQuerySchema)
+const PatientQuery = mongoose.model("ConsulterQuery",UserQuerySchema);
+
+module.exports = PatientQuery
