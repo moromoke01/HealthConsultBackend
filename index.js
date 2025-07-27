@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
-const userRouter = require('./Router/UserRouter')
+const userRouter = require('./Router/UserRouter');
+const consultationRouter = require('./Controller/ConsultationController');
+const doctorRouter = require('./Controller/doctorController')
 require("dotenv").config();
 
 // const {authenticationToken, authorizeRoles} = require('./middleware/authMiddleware');
@@ -26,9 +28,12 @@ app.use(bodyParser.json());
 const connect = require('./Config/database')
 
 //connecting Routes
-app.use("/api/", userRouter);
+app.use("/api", userRouter);
+app.use("/api/consultation", consultationRouter);
+app.use("/api", doctorRouter)
 
 const PORT = process.env.PORT || 5000;
+
 
 app.listen(PORT, ()=>{
     console.log(`server is running on port ${PORT}`);
