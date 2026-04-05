@@ -1,0 +1,34 @@
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
+
+const OTPVerificationSchema = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, // Reference to the User model
+        required: true,
+        refPath: 'userType',
+    },
+    userType: {
+        type: String,
+        required: true,
+        enum: ['Doctor', 'Patient'], // Allowed models
+    },
+    otp: {
+        type: String,
+        required: true,
+    },
+    createdAt: { 
+        type: Date,
+        required: true,
+    },
+    expiresAt: {
+        type: Date,
+        required: true,
+    },
+});
+
+const OTPVerification = mongoose.model(
+    "OTPVerification",
+    OTPVerificationSchema
+);
+
+export default OTPVerification; // ✅ Export using ES modules
